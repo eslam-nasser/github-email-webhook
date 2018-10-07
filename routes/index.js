@@ -21,8 +21,14 @@ router.get('/', function (req, res, next) {
 });
 
 router.post('/', function (req, res, next) {
+    console.log('\n\n\n\n\n GITHUB POST REQUEST');
+    console.log(req);
+
     var data = JSON.stringify(req);
     fs.writeFileSync('github-webhook-response.json', data);
+    return res.json({
+        success: true
+    });
 });
 
 module.exports = router;
