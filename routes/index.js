@@ -16,8 +16,7 @@ router.get('/', function (req, res, next) {
                 });
             } else {
                 res.json({
-                    message: 'No Github Data!',
-                    error: error
+                    message: 'No Github Data!'
                 });
             }
         });
