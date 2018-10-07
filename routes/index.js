@@ -47,7 +47,7 @@ router.post('/', function (req, res, next) {
     });
 
     var mailOptions = {
-        from: `${repository.name} <in1466@fayoum.com.eg>`,
+        from: `${repository.name} <eslam.nasser.dev@gmail.com>`,
         to: 'eslam.nasser.dev@gmail.com',
         subject: `${repository.full_name} Github Notification`,
         text: 'You have a new notification!',
@@ -72,8 +72,6 @@ router.post('/', function (req, res, next) {
                     font-size: 15px;
                 '> You have a new message!</h1>
 				<ul>
-					<li style='margin: 2px auto;'><b>Sender Name: </b> &nbsp; ${req.body.name}</li>
-					<li style='margin: 2px auto;'><b>Sender Email:</b> &nbsp; ${req.body.email}</li>
 					<li style='margin: 2px auto;'><b>Sender Message is below:</li>
 				</ul>
                 <p style='
