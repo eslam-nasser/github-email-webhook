@@ -7,12 +7,14 @@ var nodemailer = require('nodemailer');
 router.get('/', function (req, res, next) {
     try {
         fs.readFile('github-webhook-response.json', function (err, buffer) {
-            var data = JSON.parse(buffer);
-            console.log('\n\n DATA FROM LOCAL FILE => ', data);
-            res.json({
-                message: 'GitHub Data...',
-                data: data
-            });
+            if (buffer && !err) {
+                var data = JSON.parse(buffer);
+                console.log('\n\n DATA FROM LOCAL FILE => ', data);
+                res.json({
+                    message: 'GitHub Data...',
+                    data: data
+                });
+            }
         });
     } catch (error) {
         return res.json({
