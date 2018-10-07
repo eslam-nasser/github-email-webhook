@@ -14,6 +14,11 @@ router.get('/', function (req, res, next) {
                     message: 'GitHub Data...',
                     data: data
                 });
+            } else {
+                res.json({
+                    message: 'No Github Data!',
+                    error: error
+                });
             }
         });
     } catch (error) {
