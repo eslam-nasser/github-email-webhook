@@ -7,10 +7,9 @@ var nodemailer = require('nodemailer');
 router.get('/', function (req, res, next) {
     try {
         fs.readFile('github-webhook-response.json', function (err, buffer) {
-            if (err) throw err;
             var data = JSON.parse(buffer);
-            // console.log('\n\n DATA FROM LOCAL FILE => ', data);
-            return res.json({
+            console.log('\n\n DATA FROM LOCAL FILE => ', data);
+            res.json({
                 message: 'GitHub Data...',
                 data: data
             });
@@ -84,7 +83,7 @@ router.post('/', function (req, res, next) {
 		`
     };
 
-    transporter.sendMail(mailOptions, function (error, info) {
+    return transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
             console.log('___Error: => ' + error);
             res.json({
@@ -93,15 +92,12 @@ router.post('/', function (req, res, next) {
             });
         } else {
             console.log('Message Sent! ' + info.response);
+            res.sendStatus(200);
             res.json({
                 success: true,
                 msg: info.response
             });
         }
-    });
-    res.sendStatus(200);
-    res.json({
-        success: true
     });
 });
 
