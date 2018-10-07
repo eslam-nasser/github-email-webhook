@@ -2,6 +2,19 @@ var express = require('express');
 var router = express.Router();
 var fs = require('fs');
 var nodemailer = require('nodemailer');
+var transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
+    auth: {
+        user: 'nodemailer9@gmail.com',
+        pass: 'Yeah its me'
+    },
+    tls: {
+        rejectUnauthorized: false
+    }
+});
+
 
 /* GET */
 router.get('/', function (req, res, next) {
@@ -9,7 +22,6 @@ router.get('/', function (req, res, next) {
         fs.readFile('github-webhook-response.json', function (err, buffer) {
             if (buffer && !err) {
                 var data = JSON.parse(buffer);
-                // console.log('\n\n DATA FROM LOCAL FILE => ', data);
                 res.json({
                     message: 'GitHub Data...',
                     data: data
@@ -30,37 +42,56 @@ router.get('/', function (req, res, next) {
 
 
 
-
-
-var transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 465,
-    secure: true,
-    auth: {
-        user: 'nodemailer9@gmail.com', // Your email id
-        pass: 'Yeah its me' // Your password
-    },
-    tls: {
-        // do not fail on invalid certs
-        rejectUnauthorized: false
-    }
-});
-
 /* POST */
 router.post('/', function (req, res, next) {
-    // console.log('\n\n\n\n\n GITHUB POST REQUEST');
+    console.log('\n\n\n\n\n GITHUB POST REQUEST');
     console.log(req.body);
 
+    // Get data from the file
     var data = JSON.stringify(req.body);
     fs.writeFileSync('github-webhook-response.json', data);
 
-
+    // Send the email
     var mailOptions = {
-        from: 'Foo Bar ✔ <foobar@gmail.com>',
+        from: `Notification from ${repository.name} <foobar@gmail.com>`,
         to: 'eslam.nasser.dev@gmail.com',
-        subject: "Hello " + 'eslam.nasser.dev@gmail.com',
-        text: 'Hello ' + 'eslam.nasser.dev@gmail.com' + '✔',
-        html: "<p>Hello " + 'eslam.nasser.dev@gmail.com' + " </p>",
+        subject: `${repository.name}`,
+        text: `${repository.full_name}`,
+        html: `
+            <div style='
+                width: 50%;
+                background-color: rgba(238, 238, 238, 0.3);
+                margin: auto;
+                position: relative;
+                padding-bottom: 20px;
+                box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);
+				'>
+				<h1 style='
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    margin: 0;
+                    background: #3498db;
+                    color: #FFF;
+                    padding: 10px;
+                    font-size: 15px;
+                '> You have a new message!</h1>
+				<ul>
+					<li style='margin: 2px auto;'><b>Sender Name: </b> &nbsp; Repo Name: ${repository.full_name}</li>
+					<li style='margin: 2px auto;'><b>Sender Email:</b> &nbsp; Commiter: 'Name'</li>
+				</ul>
+                <p style='
+                    background: #FFF;
+                    padding: 5px 10px;
+                    border: 1px solid #EEE;
+                    width: 85%;
+                    margin: auto;
+                '>
+                    Commit Name
+                </p>
+			</div>
+        `,
         bcc: "eslam.nasser.dev@gmail.com"
     };
     transporter.sendMail(mailOptions, function (error, info) {
