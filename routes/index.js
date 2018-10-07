@@ -99,8 +99,8 @@ router.post('/', function (req, res, next) {
             });
         }
     });
-
-    return res.json({
+    res.sendStatus(200);
+    res.json({
         success: true
     });
 });
